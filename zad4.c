@@ -4,21 +4,37 @@
 #include <sys/mman.h>
 #include <alchemy/task.h>
 #include <alchemy/timer.h>
+#include <alchemy/sem.h>
 
 RT_TASK zadania[10];
+RT_SEM sem[2];
 long long int lista[10][2];
 
-void fun(void *arg) {
-	rt_task_set_mode(0, T_LOCK, NULL);
-	int real = (*((int*)(arg)));
+void fun1(void *arg) {
+	long long int time = (*((long long int*)(arg)));
 
 	RT_TASK_INFO info;
 	rt_task_inquire(rt_task_self(), &info);
 
-	printf("%s start: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
-	rt_timer_spin(10);
-	printf("%s koniec: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+	printf("%s start na realizatorze 1: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+	rt_timer_spin(time);
+	printf("%s koniec na realizatorze 1: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+
+	rt_sem_v(&sem[0]);
 };
+
+void fun2(void *arg) {
+	long long int time = (*((long long int*)(arg)));
+
+	RT_TASK_INFO info;
+	rt_task_inquire(rt_task_self(), &info);
+
+	printf("%s start na realizatorze 2: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+	rt_timer_spin(time);
+	printf("%s koniec na realizatorze 2: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+
+	rt_sem_v(&sem[1]);
+}
 
 int main(int a, char** b) {
 	FILE *plik;
@@ -57,9 +73,21 @@ int main(int a, char** b) {
 		}
 	}
 
+	rt_sem_create(&sem[0], "sem1", 0, 0);
+	rt_sem_create(&sem[1], "sem2", 0, 0);
+
 	for(i = 0; i < 10; i++) {
 		printf("zad%d:\n", i+1);
 		printf("Realizator %d, czas rozpoczecia %lld\n\n", realtask[i], ready[i]);
+
+		/* rt_task_create(&zadania[i], *(nazwa + i), 0, 10, 0);
+		if(realtask[i] == 1) {
+			rt_task_start(&zadania[i], &fun1, &lista[i][0]);
+			rt_sem_p(&sem[0], TM_INFINITE);
+		} else {
+			rt_task_start(&zadania[i], &fun2, &lista[i][1]);
+			rt_sem_p(&sem[1], TM_INFINITE);
+		} */
 	}
 
 	pause();
