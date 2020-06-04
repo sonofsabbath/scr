@@ -7,7 +7,7 @@
 
 // struktura do przechowywania zadan
 RT_TASK zadania[10];
-int lista[10][4];
+long long int lista[10][4];
 
 void fun2(void *arg) {
 	rt_task_set_mode(0, T_LOCK, NULL);
@@ -36,7 +36,7 @@ int main(int a, char** b) {
 	plik = fopen("zad1.txt", "r");
 	for(i = 0; i < 10; i++) {
 		for(j = 0; j < 4; j++) {
-			fscanf(plik, "%d", &lista[i][j]);
+			fscanf(plik, "%lld", &lista[i][j]);
 		}
 	}
 	fclose(plik);

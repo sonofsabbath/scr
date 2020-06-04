@@ -38,10 +38,6 @@ int main() {
 		printf("Deadline: ");
 		scanf("%lld", &input.deadline);
 
-		// input.start *= 1000000;
-		// input.czas *= 1000000;
-		// input.deadline *= 1000000;
-
 		rt_mutex_acquire(&mutex, TM_INFINITE);
 		int ind = ++ptr[0].ind;
 		ptr[ind] = input;
