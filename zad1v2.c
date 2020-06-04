@@ -50,7 +50,7 @@ int main(int a, char** b) {
 	for(i = 0; i < 10; i++) {
 		rt_task_create(&zadania[i], *(nazwa + i), 0, lista[i][2], 0);
 
-		long long ready = (long long) lista[i][0];
+		long long ready = (long long) rt_timer_ns2ticks(lista[i][0]);
 		rt_task_set_periodic(&zadania[i], start + ready, lista[i][1]);
 		rt_task_start(&zadania[i], &fun2, &i);
 	}

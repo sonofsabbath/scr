@@ -11,7 +11,7 @@ const int TASK_MAX = 50;
 
 typedef union{
 	struct {
-		int priorytet, czas;
+		long long int priorytet, czas;
 	};
 	int ind;
 }task_data;
@@ -22,9 +22,9 @@ void fun(void *arg) {
 	RT_TASK_INFO info;
 	rt_task_inquire(rt_task_self(), &info);
 
-	printf("%s start: %d\n", info.name, (long) rt_timer_read());
-	rt_timer_spin((*((int*)(arg))));
-	printf("%s koniec: %d\n", info.name, (long) rt_timer_read());
+	printf("%s start: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
+	rt_timer_spin((*((long long int*)(arg))));
+	printf("%s koniec: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
 }
 
 void fromheap(void *arg) {
@@ -51,7 +51,7 @@ void fromheap(void *arg) {
 		rt_mutex_acquire(&mutex, TM_INFINITE);
 
 		ind = (ind + 1) % TASK_MAX;
-		int *czas = malloc(sizeof(int));
+		long long int *czas = malloc(sizeof(long long int));
 		*czas = ptr[ind].czas;
 
 		char nazwa[12];

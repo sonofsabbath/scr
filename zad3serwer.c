@@ -11,14 +11,14 @@ const int TASK_MAX = 50;
 
 typedef union {
 	struct {
-		int start, czas, deadline;
+		long long int start, czas, deadline;
 	};
 	int ind;
 }task_data;
 
 typedef struct wezel {
 	struct {
-		int start, czas, deadline;
+		long long int start, czas, deadline;
 	};
 	struct wezel* next;
 }node_data;
@@ -66,9 +66,9 @@ void fun(void *arg) {
 	rt_task_inquire(rt_task_self(), &info);
 
 	node_data* zadanie = (node_data*)arg;
-	printf("%s start: %d\n", info.name, rt_timer_read());
+	printf("%s start: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()));
 	rt_timer_spin(zadanie -> czas);
-	printf("%s koniec: %d, deadline: %d\n", info.name, rt_timer_read(), zadanie -> deadline);
+	printf("%s koniec: %lld, deadline: %lld\n", info.name, (long long int) rt_timer_ticks2ns(rt_timer_read()), zadanie -> deadline);
 }
 
 void fromheap(void *arg) {
@@ -105,7 +105,7 @@ void fromheap(void *arg) {
 		}
 
 		rt_mutex_acquire(&mutex, TM_INFINITE);
-		int time = rt_timer_read();
+		long long int time = (long long int) rt_timer_ticks2ns(rt_timer_read());
 
 		while(ptr[0].ind != 0) {
 			rt_sem_p(&sem, TM_INFINITE);
@@ -121,7 +121,7 @@ void fromheap(void *arg) {
 
 		rt_mutex_release(&mutex);
 		zad = node_head;
-		time = rt_timer_read();
+		time = (long long int) rt_timer_ticks2ns(rt_timer_read());
 
 		while(zad != NULL && zad -> start > time) {
 			zad = zad -> next;

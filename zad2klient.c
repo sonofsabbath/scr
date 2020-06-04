@@ -10,7 +10,7 @@ const int TASK_MAX = 50;
 
 typedef union{
 	struct {
-		int priorytet, czas;
+		long long int priorytet, czas;
 	};
 	int ind;
 }task_data;
@@ -34,9 +34,9 @@ int main() {
 	while(1) {
 		task_data input;
 		printf("Czas trwania: ");
-		scanf("%d", &input.czas);
+		scanf("%lld", &input.czas);
 		printf("Priorytet: ");
-		scanf("%d", &input.priorytet);
+		scanf("%lld", &input.priorytet);
 		rt_mutex_acquire(&mutex, TM_INFINITE);
 
 		int ind = ++ptr[0].ind;

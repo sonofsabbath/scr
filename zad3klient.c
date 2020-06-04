@@ -8,7 +8,7 @@
 
 typedef union {
 	struct {
-		int start, czas, deadline;
+		long long int start, czas, deadline;
 	};
 	int ind;
 }task_data;
@@ -32,15 +32,15 @@ int main() {
 	while(1) {
 		task_data input;
 		printf("Czas rozpoczecia: ");
-		scanf("%d", &input.start);
+		scanf("%lld", &input.start);
 		printf("Czas trwania: ");
-		scanf("%d", &input.czas);
+		scanf("%lld", &input.czas);
 		printf("Deadline: ");
-		scanf("%d", &input.deadline);
+		scanf("%lld", &input.deadline);
 
-		input.start *= 1000000;
-		input.czas *= 1000000;
-		input.deadline *= 1000000;
+		// input.start *= 1000000;
+		// input.czas *= 1000000;
+		// input.deadline *= 1000000;
 
 		rt_mutex_acquire(&mutex, TM_INFINITE);
 		int ind = ++ptr[0].ind;
