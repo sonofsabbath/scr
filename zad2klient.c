@@ -37,7 +37,6 @@ int main() {
 		scanf("%d", &input.czas);
 		printf("Priorytet: ");
 		scanf("%d", &input.priorytet);
-
 		rt_mutex_acquire(&mutex, TM_INFINITE);
 
 		int ind = ++ptr[0].ind;
